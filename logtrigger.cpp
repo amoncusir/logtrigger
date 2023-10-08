@@ -1,12 +1,11 @@
-
-#include <cstdio>
-
 #include "args.h"
 #include "ubus.h"
 #include "event.h"
 #include "context.h"
 
 #include <iostream>
+
+#include <cstdio>
 
 static void log_callback(struct ubus_log_event* event)
 {
