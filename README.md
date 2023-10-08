@@ -13,11 +13,11 @@ Options:
 
 Match Configuration:
     Types:
-      0 - all: match with all log events
-      1 - regex: Regular expression for match
+      all: match with all log events
+      regex: Regular expression for match
     Usage:
-      All: ... -t all '' '/mi/abs/script.sh'
-      All: ... -t regex '^cool ?regex$' '/mi/abs/script.sh'
+      all: ... -t all - '/mi/abs/script.sh'
+      regex: ... -t regex '^cool ?regex$' '/mi/abs/script.sh'
 ```
 
 ## Why?
@@ -37,14 +37,18 @@ chain input {
 }
 ```
 
-Then you can react from this event, like:
+Then you can react from this event with:
 
 **Script: http_logs.sh**
 ```shell
-echo "Http package" >> /var/logs/http_package.log
+echo "Http package: $5" >> /var/logs/http_package.log
 ```
 
-**And add trigger:**
+**And run with trigger:**
 ```text
 $ logtrigger -t regex '*.NOTIFY*.' /usr/share/logtrigger/http_logs.sh
 ```
+
+## Install
+
+Check the package repo: https://github.com/amoncusir/packopenwrt
