@@ -13,8 +13,8 @@ namespace Logtrigger
 {
     // TriggerEvent ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    TriggerEvent::TriggerEvent(EventMatcher* matcher, std::string script_path) :
-        m_matcher {matcher}, m_script_path {std::move(script_path)}
+    TriggerEvent::TriggerEvent(EventMatcher* matcher, const char* script_path) :
+        m_matcher {matcher}, m_script_path {script_path}
     {}
 
     TriggerEvent::~TriggerEvent()
@@ -29,7 +29,7 @@ namespace Logtrigger
 
     void TriggerEvent::run(ubus_log_event& event) const
     {
-        run_and_forget_script(m_script_path.c_str(), event);
+        run_and_forget_script(m_script_path, event);
     }
 
     // TriggerHandler ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -42,9 +42,9 @@ namespace Logtrigger
         }
     }
 
-    TriggerHandler& TriggerHandler::add_event(EventMatcher* matcher, std::string script_path)
+    TriggerHandler& TriggerHandler::add_event(EventMatcher* matcher, const char* script_path)
     {
-        m_triggers.emplace_back(new TriggerEvent(matcher, std::move(script_path)));
+        m_triggers.emplace_back(new TriggerEvent(matcher, script_path));
         return *this;
     }
 

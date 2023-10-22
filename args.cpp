@@ -15,7 +15,7 @@ namespace Logtrigger
     {
         if (argc < 1) throw std::runtime_error("Invalid init. Must be at least one argument");
 
-        this->m_name = std::string {*argv};
+        this->m_name = *argv;
 
         for (int i = 1, p = 2; p < argc;)
         {
@@ -34,7 +34,7 @@ namespace Logtrigger
                         return;
                     }
 
-                    this->m_sock_path = std::string(argv[p]);
+                    this->m_sock_path = argv[p];
 
                     i += 2;
                     p += 2;
@@ -70,10 +70,10 @@ namespace Logtrigger
 
     const char* Args::sock_path()
     {
-        return m_sock_path.empty() ? nullptr : m_sock_path.c_str();
+        return m_sock_path;
     }
 
-    std::vector<Args::MatchExec*>& Args::triggers()
+    const std::vector<Args::MatchExec*>& Args::triggers()
     {
         return m_triggers;
     }
@@ -103,13 +103,13 @@ namespace Logtrigger
         std::cout << std::endl;
     }
 
-    Args::MatchExec* Args::make_struct(std::string_view type, std::string_view value, std::string_view path)
+    Args::MatchExec* Args::make_struct(const char* type, const char* value, const char* path)
     {
         Args::MatchExec* match {new Args::MatchExec {}};
 
-        match->type = std::string(type);
-        match->script_path = std::string(path);
-        match->args = std::string(value);
+        match->type = type;
+        match->script_path = path;
+        match->args = value;
 
         return match;
     }

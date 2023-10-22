@@ -16,15 +16,15 @@ namespace Logtrigger
     public:
         struct MatchExec
         {
-            std::string type {};
-            std::string script_path {};
-            std::string args {};
+            const char* type {};
+            const char* script_path {};
+            const char* args {};
         };
 
     private:
-        std::string m_name {""};
+        const char* m_name {};
 
-        std::string m_sock_path {""};
+        const char* m_sock_path {};
 
         std::vector<MatchExec*> m_triggers {};
 
@@ -35,7 +35,7 @@ namespace Logtrigger
 
         const char* sock_path();
 
-        std::vector<MatchExec*>& triggers();
+        const std::vector<MatchExec*>& triggers();
 
         bool is_valid();
 
@@ -43,7 +43,7 @@ namespace Logtrigger
 
     private:
 
-        static MatchExec* make_struct(std::string_view type, std::string_view value, std::string_view path);
+        static MatchExec* make_struct(const char* type, const char* value, const char* path);
     };
 }
 

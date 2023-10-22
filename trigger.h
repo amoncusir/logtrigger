@@ -20,10 +20,10 @@ namespace Logtrigger
     {
     private:
         const EventMatcher* m_matcher {};
-        const std::string m_script_path {};
+        const char* m_script_path {};
 
     public:
-        explicit TriggerEvent(EventMatcher* matcher, std::string script_path);
+        explicit TriggerEvent(EventMatcher* matcher, const char* script_path);
 
         ~TriggerEvent();
 
@@ -42,7 +42,7 @@ namespace Logtrigger
 
         ~TriggerHandler();
 
-        TriggerHandler& add_event(EventMatcher* matcher, std::string script_path);
+        TriggerHandler& add_event(EventMatcher* matcher, const char* script_path);
 
         void process(ubus_log_event& event);
     };

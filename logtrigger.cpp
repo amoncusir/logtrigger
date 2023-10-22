@@ -5,8 +5,6 @@
 
 #include <iostream>
 
-#include <cstdio>
-
 static void log_callback(struct ubus_log_event* event)
 {
     const Logtrigger::Context& ctx {Logtrigger::Context::get_instance()};

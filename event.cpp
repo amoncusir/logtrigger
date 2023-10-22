@@ -11,38 +11,38 @@
 
 namespace Logtrigger
 {
-    EventMatcher* generate_from(Args::MatchExec* exec)
+    EventMatcher* generate_from(const Args::MatchExec* exec)
     {
-        if (exec->type == "all")
+        if (strcmp(exec->type, "all") == 0)
         {
             return new AcceptAllMatcher(exec);
         }
-        else if (exec->type == "regex")
+        else if (strcmp(exec->type, "regex") == 0)
         {
             return new RegexDataMatcher(exec);
         }
 
-        throw std::runtime_error("Invalid type for matcher: " + exec->type);
+        throw std::runtime_error("Invalid type for matcher: " + std::string(exec->type));
     }
 
     // AcceptAllMatcher ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    AcceptAllMatcher::AcceptAllMatcher(Args::MatchExec*)
+    AcceptAllMatcher::AcceptAllMatcher(const Args::MatchExec*)
     {}
 
-    bool Logtrigger::AcceptAllMatcher::accept(ubus_log_event& event) const
+    bool Logtrigger::AcceptAllMatcher::accept(const ubus_log_event& event) const
     {
         return true;
     }
 
     // RegexDataMatcher ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    RegexDataMatcher::RegexDataMatcher(std::string& regex) : m_regex {regex.c_str(), std::regex::ECMAScript}
+    RegexDataMatcher::RegexDataMatcher(const char* regex) : m_regex {regex, std::regex::ECMAScript}
     {}
 
-    RegexDataMatcher::RegexDataMatcher(Args::MatchExec* exec) : RegexDataMatcher(exec->args)
+    RegexDataMatcher::RegexDataMatcher(const Args::MatchExec* exec) : RegexDataMatcher(exec->args)
     {}
 
-    bool RegexDataMatcher::accept(ubus_log_event& event) const
+    bool RegexDataMatcher::accept(const ubus_log_event& event) const
     {
         return std::regex_match(event.data, m_regex);
     }

@@ -47,10 +47,13 @@ namespace Logtrigger
 
     const Context& Context::get_instance()
     {
+
+#ifdef DEBUG
         if (s_singleton == nullptr)
         {
             throw std::runtime_error("Uninitialized Context. First call Context::init_instance");
         }
+#endif
 
         return *s_singleton;
     }

@@ -9,7 +9,7 @@
 
 namespace Logtrigger
 {
-    void run_and_forget_script(const char* script_path, ubus_log_event& event);
+    void run_and_forget_script(const char* script_path, const ubus_log_event& event);
 }
 
 #endif //LOGTRIGGER_SRC_UTIL_H

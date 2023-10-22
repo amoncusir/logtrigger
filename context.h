@@ -19,7 +19,6 @@ namespace Logtrigger
 
         Context() = default;
 
-
     public:
         ~Context();
 

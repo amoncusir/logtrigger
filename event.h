@@ -20,30 +20,30 @@ namespace Logtrigger
     public:
         virtual ~EventMatcher() = default;
 
-        virtual bool accept(ubus_log_event& event) const = 0;
+        virtual bool accept(const ubus_log_event& event) const = 0;
     };
 
-    EventMatcher* generate_from(Args::MatchExec* exec);
+    EventMatcher* generate_from(const Args::MatchExec * exec);
 
     class AcceptAllMatcher : public EventMatcher
     {
     public:
-        explicit AcceptAllMatcher(Args::MatchExec* exec);
+        explicit AcceptAllMatcher(const Args::MatchExec* exec);
 
-        bool accept(ubus_log_event& event) const override;
+        bool accept(const ubus_log_event& event) const override;
     };
 
     class RegexDataMatcher : public EventMatcher
     {
     private:
-        std::regex m_regex {};
+        const std::regex m_regex {};
 
     public:
-        explicit RegexDataMatcher(std::string& regex);
+        explicit RegexDataMatcher(const char* regex);
 
-        explicit RegexDataMatcher(Args::MatchExec* exec);
+        explicit RegexDataMatcher(const Args::MatchExec* exec);
 
-        bool accept(ubus_log_event& event) const override;
+        bool accept(const ubus_log_event& event) const override;
     };
 } // Logtrigger
 
