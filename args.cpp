@@ -56,9 +56,9 @@ namespace Logtrigger
                     i += 4;
                     p += 4;
 
-                    if (argv[i][0] == '+') // TODO: bad way to add more args...!
+                    if (argc - p > 0 && argv[i][0] == '+') // TODO: bad way to add more args...!
                     {
-                        if (argv[i][1] == 't')
+                        if (argv[i][1] == 'c')
                         {
                             triggerArgs->cold_down = strtol(argv[p], nullptr, 10);
 
