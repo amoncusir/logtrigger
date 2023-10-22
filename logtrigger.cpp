@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 
     for (const auto& item: args.triggers())
     {
-        ctx.handler().add_event(generate_from(item), item->script_path);
+        ctx.handler().add_event(item);
     }
 
     ubus_log_callback(args.sock_path(), event_ubus_handler);

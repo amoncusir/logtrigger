@@ -8,13 +8,14 @@
 #include "util.h"
 
 #include <string>
+#include <ctime>
 
 namespace Logtrigger
 {
     // TriggerEvent ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    TriggerEvent::TriggerEvent(EventMatcher* matcher, const char* script_path) :
-        m_matcher {matcher}, m_script_path {script_path}
+    TriggerEvent::TriggerEvent(EventMatcher* matcher, const char* script_path, int cool_down) :
+        m_matcher {matcher}, m_script_path {script_path}, m_cold_down {cool_down}
     {}
 
     TriggerEvent::~TriggerEvent()
@@ -22,12 +23,24 @@ namespace Logtrigger
         delete m_matcher;
     }
 
-    bool TriggerEvent::accept(ubus_log_event& event) const
+    bool TriggerEvent::accept(ubus_log_event& event)
     {
+        if (m_cold_down > 0)
+        {
+            time_t current_time = time(nullptr);
+
+            if (m_next_time >= current_time)
+            {
+                return false;
+            }
+
+            m_next_time = current_time + m_cold_down;
+        }
+
         return m_matcher->accept(event);
     }
 
-    void TriggerEvent::run(ubus_log_event& event) const
+    void TriggerEvent::run(ubus_log_event& event)
     {
         run_and_forget_script(m_script_path, event);
     }
@@ -42,9 +55,12 @@ namespace Logtrigger
         }
     }
 
-    TriggerHandler& TriggerHandler::add_event(EventMatcher* matcher, const char* script_path)
+    TriggerHandler& TriggerHandler::add_event(const Args::TriggerArgs* args)
     {
-        m_triggers.emplace_back(new TriggerEvent(matcher, script_path));
+        EventMatcher* matcher = generate_from(args);
+        auto* event = new TriggerEvent(matcher, args->script_path, args->cold_down);
+
+        m_triggers.emplace_back(event);
         return *this;
     }
 

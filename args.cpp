@@ -25,6 +25,8 @@ namespace Logtrigger
                 return;
             }
 
+            Args::TriggerArgs* triggerArgs {};
+
             switch (argv[i][1])
             {
                 case 's':
@@ -47,10 +49,24 @@ namespace Logtrigger
                         return;
                     }
 
-                    m_triggers.push_back(make_struct(argv[p], argv[p + 1], argv[p + 2]));
+                    triggerArgs = make_struct(argv[p], argv[p + 1], argv[p + 2]);
+
+                    m_triggers.push_back(triggerArgs);
 
                     i += 4;
                     p += 4;
+
+                    if (argv[i][0] == '+') // TODO: bad way to add more args...!
+                    {
+                        if (argv[i][1] == 't')
+                        {
+                            triggerArgs->cold_down = strtol(argv[p], nullptr, 10);
+
+                            i += 2;
+                            p += 2;
+                        }
+                    }
+
                     break;
                 default:
                     std::cerr << "Invalid args. Unknown flag : -" << argv[i][1] << '\n';
@@ -62,7 +78,7 @@ namespace Logtrigger
 
     Args::~Args()
     {
-        for (Args::MatchExec*& item: m_triggers)
+        for (Args::TriggerArgs*& item: m_triggers)
         {
             delete item;
         }
@@ -73,7 +89,7 @@ namespace Logtrigger
         return m_sock_path;
     }
 
-    const std::vector<Args::MatchExec*>& Args::triggers()
+    const std::vector<Args::TriggerArgs*>& Args::triggers()
     {
         return m_triggers;
     }
@@ -91,6 +107,7 @@ namespace Logtrigger
         std::cout << "Options:" << '\n';
         std::cout << "    [-s] <socket>                Socket to read" << '\n';
         std::cout << "     -t  <type> <value> <path>   Match configuration" << '\n';
+        std::cout << "         [+c <seconds>] Add cold down time for next execution" << '\n';
         std::cout << '\n';
         std::cout << "Match Configuration:" << '\n';
         std::cout << "    Types:" << '\n';
@@ -98,18 +115,19 @@ namespace Logtrigger
         std::cout << "      1 - Regex: Regular expression for match" << '\n';
         std::cout << "    Usage:" << '\n';
         std::cout << "      All: ... -t all '' '/mi/abs/script.sh'" << '\n';
-        std::cout << "      All: ... -t regex '^cool ?regex$' '/mi/abs/script.sh'" << '\n';
+        std::cout << "      Regex: ... -t regex '^cool ?regex$' '/mi/abs/script.sh'" << '\n';
+        std::cout << "      Regex with cold down: ... -t regex '^cool ?regex$' '/mi/abs/script.sh' +c 3600" << '\n';
         std::cout << "    " << '\n';
         std::cout << std::endl;
     }
 
-    Args::MatchExec* Args::make_struct(const char* type, const char* value, const char* path)
+    Args::TriggerArgs* Args::make_struct(const char* type, const char* value, const char* path)
     {
-        Args::MatchExec* match {new Args::MatchExec {}};
+        Args::TriggerArgs* match {new Args::TriggerArgs {}};
 
         match->type = type;
         match->script_path = path;
-        match->args = value;
+        match->matcher = value;
 
         return match;
     }

@@ -11,7 +11,7 @@
 
 namespace Logtrigger
 {
-    EventMatcher* generate_from(const Args::MatchExec* exec)
+    EventMatcher* generate_from(const Args::TriggerArgs* exec)
     {
         if (strcmp(exec->type, "all") == 0)
         {
@@ -26,7 +26,7 @@ namespace Logtrigger
     }
 
     // AcceptAllMatcher ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    AcceptAllMatcher::AcceptAllMatcher(const Args::MatchExec*)
+    AcceptAllMatcher::AcceptAllMatcher(const Args::TriggerArgs*)
     {}
 
     bool Logtrigger::AcceptAllMatcher::accept(const ubus_log_event& event) const
@@ -39,7 +39,7 @@ namespace Logtrigger
     RegexDataMatcher::RegexDataMatcher(const char* regex) : m_regex {regex, std::regex::ECMAScript}
     {}
 
-    RegexDataMatcher::RegexDataMatcher(const Args::MatchExec* exec) : RegexDataMatcher(exec->args)
+    RegexDataMatcher::RegexDataMatcher(const Args::TriggerArgs* exec) : RegexDataMatcher(exec->matcher)
     {}
 
     bool RegexDataMatcher::accept(const ubus_log_event& event) const

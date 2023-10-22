@@ -13,6 +13,7 @@
 #include <vector>
 
 #include <cstdint>
+#include <ctime>
 
 namespace Logtrigger
 {
@@ -21,15 +22,17 @@ namespace Logtrigger
     private:
         const EventMatcher* m_matcher {};
         const char* m_script_path {};
+        long m_cold_down {-1};
+        time_t m_next_time {0};
 
     public:
-        explicit TriggerEvent(EventMatcher* matcher, const char* script_path);
+        explicit TriggerEvent(EventMatcher* matcher, const char* script_path, int cool_down);
 
         ~TriggerEvent();
 
-        bool accept(ubus_log_event& event) const;
+        bool accept(ubus_log_event& event);
 
-        void run(ubus_log_event& event) const;
+        void run(ubus_log_event& event);
     };
 
     class TriggerHandler
@@ -42,7 +45,7 @@ namespace Logtrigger
 
         ~TriggerHandler();
 
-        TriggerHandler& add_event(EventMatcher* matcher, const char* script_path);
+        TriggerHandler& add_event(const Args::TriggerArgs* args);
 
         void process(ubus_log_event& event);
     };

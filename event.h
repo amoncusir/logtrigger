@@ -23,12 +23,12 @@ namespace Logtrigger
         virtual bool accept(const ubus_log_event& event) const = 0;
     };
 
-    EventMatcher* generate_from(const Args::MatchExec * exec);
+    EventMatcher* generate_from(const Args::TriggerArgs * exec);
 
     class AcceptAllMatcher : public EventMatcher
     {
     public:
-        explicit AcceptAllMatcher(const Args::MatchExec* exec);
+        explicit AcceptAllMatcher(const Args::TriggerArgs* exec);
 
         bool accept(const ubus_log_event& event) const override;
     };
@@ -41,7 +41,7 @@ namespace Logtrigger
     public:
         explicit RegexDataMatcher(const char* regex);
 
-        explicit RegexDataMatcher(const Args::MatchExec* exec);
+        explicit RegexDataMatcher(const Args::TriggerArgs* exec);
 
         bool accept(const ubus_log_event& event) const override;
     };
